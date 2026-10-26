@@ -28,9 +28,10 @@ jobs:
       - name: Vet
         run: v vet .
 
-      - name: Build (shared library)
-        run: v -shared .
-
+      # `v test .` compiles the whole module and runs the mock suite; the
+      # example build compiles the module as an imported dependency. Together
+      # they are a full compile check (a standalone `v -shared .` hits a musl
+      # ld quirk in the Alpine image on the CI runner and adds nothing).
       - name: Test (mock)
         run: v -W test .
 
