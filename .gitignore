@@ -1,0 +1,9 @@
+# V build artifacts
+*.exe
+*.o
+*.so
+unirate-api-v
+quickstart
+/examples/quickstart
+*_test
+.vmodules/

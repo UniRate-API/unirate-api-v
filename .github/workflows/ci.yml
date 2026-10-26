@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: thevlang/vlang:latest
+    steps:
+      # actions/checkout v4.2.2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+      - name: Make the module importable
+        run: |
+          mkdir -p "$HOME/.vmodules"
+          ln -s "$GITHUB_WORKSPACE" "$HOME/.vmodules/unirate"
+
+      - name: Format check
+        run: v fmt -verify .
+
+      - name: Vet
+        run: v vet .
+
+      - name: Build (shared library)
+        run: v -shared .
+
+      - name: Test (mock)
+        run: v -W test .
+
+      - name: Build example
+        run: v examples/quickstart.v
